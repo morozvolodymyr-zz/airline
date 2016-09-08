@@ -1,10 +1,20 @@
 from django import forms
-from airline_app.models import Users
+from django.forms import ModelChoiceField
+from airline_app.models import Users, Roles
 
 
-class RegistrationForm(forms.Form):
-    name = forms.CharField(max_length=Users.max_len_name)
-    surname = forms.CharField(max_length=Users.max_len_name)
-    e_mail = forms.EmailField()
-    password = forms.CharField(max_length=Users.max_len_pass, widget=forms.PasswordInput)
-    role = forms.ChoiceField(choices=['adm', 'dis'])
+class MyModelChoiceField(ModelChoiceField):
+
+    def label_from_instance(self, obj):
+        return obj.role
+
+
+class RegistrationForm(forms.ModelForm):
+    id_role = MyModelChoiceField(queryset=Roles.objects.all(), label='Role')
+
+    class Meta:
+        model = Users
+        fields = ['name', 'surname', 'e_mail', 'password', 'id_role']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }

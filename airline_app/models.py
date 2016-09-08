@@ -2,24 +2,20 @@ from django.db import models
 
 
 class Roles(models.Model):
-    max_len = 20
-    role = models.CharField(max_length=max_len)
+    role = models.CharField(max_length=20)
 
 
 class Cities(models.Model):
-    max_len = 25
-    city = models.CharField(max_length=max_len)
+    city = models.CharField(max_length=25)
 
 
 class Users(models.Model):
-    max_len_name = 30
-    max_len_pass = 20
-    name = models.CharField(max_length=max_len_name)
-    surname = models.CharField(max_length=max_len_name)
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
     e_mail = models.EmailField()
-    password = models.CharField(max_length=max_len_pass)
+    password = models.CharField(max_length=20)
     id_role = models.ForeignKey(to=Roles, on_delete=models.CASCADE, related_name='id_role')
-    confirmed = models.BooleanField()
+    confirmed = models.BooleanField(default=False)
 
 
 class Team(models.Model):
