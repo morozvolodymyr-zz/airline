@@ -18,3 +18,12 @@ class RegistrationForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput(),
         }
+
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = Users
+        fields = ['e_mail', 'password']
+        widgets = {
+            'password': forms.PasswordInput()
+        }
