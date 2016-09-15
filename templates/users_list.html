@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users list</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var root_url = 'http://127.0.0.1:8000';
+        function users_list(){
+            $.ajax({
+                type:'GET',
+                contentType: 'application/json',
+                url: root_url + '/users_list',
+                dataType: 'json',
+                success: function(data, text_status, jq){
+                    var users = data.users;
+                    var output = "<form><table><tr><td>Name</td><td>Surname</td><td>e-mail</td><td>role</td><td></td></tr>";
+                    for (var i = 0; i < users.length; i++){
+                        output += "<tr><td>" + users[i].name + "</td><td>" + users[i].surname + "</td><td>" +
+                                users[i].e_mail + "</td><td>" + users[i].role + "</td><td><input type='button'" +
+                                "class='type'" + "id=" + "'" + users[i].id + "'" + "value='Delete'" + "</td></tr>"
+                    }
+                    output += "</table></form>";
+                    console.log(output);
+                    document.getElementById("users").innerHTML = output;
+                    $(function(){
+                        $(".type")
+                                .on('click', function(){
+{#                                    prompt#}
+                                    var u_id = $(this).attr('id');
+                                    send_request(u_id)
+                                })
+                    })
+                }
+            })
+        }
+        function send_request(u_id){
+            $.ajax({
+                type:'DELETE',
+                contentType: 'application/json',
+                url: root_url + '/delete_user/' + u_id,
+                success: function(data, text_status, jq){
+                    users_list()
+                }
+            })
+        }
+    </script>
+</head>
+<body onload="users_list()">
+    <div id="users">
+    </div>
+</body>
+</html>

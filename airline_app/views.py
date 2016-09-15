@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.views.generic import FormView
+from django.shortcuts import render, redirect
+from django.views.generic import FormView, View
 from airline_app.forms import RegistrationForm, LoginForm
 from airline_app.models import Users
 
@@ -25,7 +25,9 @@ class LoginView(FormView):
         if request.session.get('user_e_mail') is not None:
             u = Users.objects.filter(e_mail=request.session.get('user_e_mail')).first()
             if u.id_role_id == 1:
+                # return redirect(to='admin', e_mail=u.e_mail, name=u.name, surname=u.surname)
                 return render(request, 'admin.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
+            # redirect
             elif u.id_role_id == 2:
                 return render(request, 'dispatcher.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
             else:
@@ -43,8 +45,10 @@ class LoginView(FormView):
             if u is not None:
                 request.session['user_e_mail'] = user_e_mail
                 if u.id_role_id == 1:
+                    request.session['user_role'] = 1
                     return render(request, 'admin.html', {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname})
                 elif u.id_role_id == 2:
+                    request.session['user_role'] = 2
                     return render(request, 'dispatcher.html',
                                   {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname})
                 else:
@@ -52,3 +56,10 @@ class LoginView(FormView):
                                   {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname})
             else:
                 return render(request, 'login.html', {'error': 'login incorrect', 'form': LoginForm})
+
+
+class GetUsersView(View):
+    template_name = 'users_list.html'
+
+    def get(self, request):
+        return render(request, 'users_list.html', {})
