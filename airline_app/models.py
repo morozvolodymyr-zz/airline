@@ -5,8 +5,8 @@ class Roles(models.Model):
     role = models.CharField(max_length=20)
 
 
-class Cities(models.Model):
-    city = models.CharField(max_length=25)
+# class Cities(models.Model):
+#     city = models.CharField(max_length=25)
 
 
 class Users(models.Model):
@@ -15,7 +15,6 @@ class Users(models.Model):
     e_mail = models.EmailField()
     password = models.CharField(max_length=20)
     id_role = models.ForeignKey(to=Roles, on_delete=models.CASCADE, related_name='id_role')
-    confirmed = models.BooleanField(default=False)
 
 
 class Team(models.Model):
@@ -28,7 +27,8 @@ class Team(models.Model):
 
 
 class Flights(models.Model):
-    id_from_city = models.ForeignKey(to=Cities, on_delete=models.CASCADE, related_name='from_city')
-    id_to_city = models.ForeignKey(to=Cities, on_delete=models.CASCADE, related_name='to_city')
-    date = models.DateTimeField()
+    # id_from_city = models.ForeignKey(to=Cities, on_delete=models.CASCADE, related_name='from_city')
+    # id_to_city = models.ForeignKey(to=Cities, on_delete=models.CASCADE, related_name='to_city')
+    from_city = models.CharField(max_length=30, default='')
+    to_city = models.CharField(max_length=30, default='')
     id_team = models.ForeignKey(to=Team, on_delete=models.CASCADE, related_name='team')

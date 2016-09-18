@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flights</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var root_url = 'http://127.0.0.1:8000';
+        function flights(){
+            $.ajax({
+                type:'GET',
+                contentType: 'application/json',
+                url: root_url + '/flights',
+                dataType: 'json',
+                success: function(data, text_status, jq){
+                    var flights = data.flights;
+                    var output = "<form><table><tr><td>#</td><td>From</td><td>To</td><td></td></tr>" +
+                            "<tr><td></td><td><input type='text' id='from'/></td>" +
+                            "<td><input type='text' id='to'/></td>" +
+                            "<td><input type='button' class='add' value='Add'</td></tr>";
+                    for (var i = 0; i < flights.length; i++){
+                        output += "<tr><td>" + flights[i].id + "</td><td>" + flights[i].from + "</td><td>" +
+                                flights[i].to + "</td><td><input type='button' class='delete' id='" + flights[i].id +
+                                "' " + "value='Delete'</td></tr>"
+                    }
+                    output += "</table></form>";
+                    document.getElementById("flights").innerHTML = output;
+                    $(function(){
+                        $(".add")
+                                .on('click', function(){
+                                    var from = document.getElementById("from").value;
+                                    var to = document.getElementById("to").value;
+                                    send_flight(from, to);
+                                })
+                    });
+                    $(function(){
+                        $(".delete")
+                                .on('click', function(){
+                                    var f_id = $(this).attr('id');
+                                    delete_flight(f_id);
+                                })
+                    })
+                }
+            })
+        }
+        function send_flight(from, to){
+            $.ajax({
+                type:'POST',
+                contentType: 'application/json',
+                url: root_url + '/add_flight',
+                data: JSON.stringify({
+                    'from':from,
+                    'to':to
+                    }),
+                success: function(data, text_status, jq){
+                    flights()
+                }
+            })
+        }
+        function delete_flight(f_id){
+            $.ajax({
+                type: 'DELETE',
+                contentType: 'application/json',
+                url: root_url + '/delete_flight/' + f_id,
+                success: function(data, text_status, jq){
+                    flights()
+                }
+            })
+        }
+    </script>
+</head>
+<body onload="flights()">
+    <div id="flights">
+    </div>
+</body>
+</html>
