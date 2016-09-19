@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
-from airline_app.models import Flights, Team
+from airline_app.models import Flights
 
 
 @api_view(['GET'])
@@ -28,8 +28,7 @@ def add_flight(request):
         json_data = JSONParser().parse(request)
         from_city = json_data['from']
         to_city = json_data['to']
-        team = Team.objects.filter(id=1).first()
-        f = Flights(from_city=from_city, to_city=to_city, id_team=team)
+        f = Flights(from_city=from_city, to_city=to_city)
         f.save()
         return HttpResponse('ok', status=status.HTTP_200_OK)
     else:

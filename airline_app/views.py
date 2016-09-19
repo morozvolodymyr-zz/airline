@@ -66,7 +66,7 @@ class GetUsersView(View):
 
 
 class GetFlightsView(View):
-    template_name = 'flights.html'
+    template_name = 'admin_flights.html'
 
     def get(self, request):
-        return render(request, 'flights.html', {})
+        return render(request, 'admin_flights.html', {})

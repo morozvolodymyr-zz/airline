@@ -31,4 +31,5 @@ class Flights(models.Model):
     # id_to_city = models.ForeignKey(to=Cities, on_delete=models.CASCADE, related_name='to_city')
     from_city = models.CharField(max_length=30, default='')
     to_city = models.CharField(max_length=30, default='')
-    id_team = models.ForeignKey(to=Team, on_delete=models.CASCADE, related_name='team')
+    id_team = models.ForeignKey(to=Team, on_delete=models.CASCADE, null=True)
+    # пересоздать базу данных
