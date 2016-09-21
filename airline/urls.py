@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from airline_app.admin_flights_list import add_flight, delete_flight, get_flights
 from airline_app.admin_users_list_view import users_list, delete_user
-from airline_app.dispatcher_views import get_dispatcher, view_team
+from airline_app.dispatcher_views import get_dispatcher, view_team, create_team, save_team
 from airline_app.views import RegistrationView, LoginView, GetUsersView, GetFlightsView
 
 urlpatterns = [
@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^delete_flight/([\w]+)$', delete_flight),
     url(r'^get_dispatcher$', get_dispatcher),
     url(r'^view_team/([\w]+)$', view_team),
-    url(r'^create_team/([\w]+)$', create_team),
+    url(r'^create_team$', create_team),
+    url(r'^save_team/([\w]+)$', save_team)
 ]
