@@ -31,7 +31,8 @@ class LoginView(FormView):
             elif u.id_role_id == 2:
                 return render(request, 'dispatcher.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
             else:
-                return render(request, 'user_flights.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
+                return render(request, 'user_flights.html',
+                              {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname, 'id': u.id})
         else:
             form = self.get_form(LoginView.form_class)
             return render(request, LoginView.template_name, {'form': form})
@@ -42,6 +43,7 @@ class LoginView(FormView):
             user_e_mail = login_form.cleaned_data['e_mail']
             user_password = login_form.cleaned_data['password']
             u = Users.objects.filter(e_mail=user_e_mail, password=user_password).first()
+            request.session['user_id'] = u.id
             if u is not None:
                 request.session['user_e_mail'] = user_e_mail
                 if u.id_role_id == 1:
@@ -53,7 +55,7 @@ class LoginView(FormView):
                                   {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname})
                 else:
                     return render(request, 'user_flights.html',
-                                  {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname})
+                                  {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname, 'id': u.id})
             else:
                 return render(request, 'login.html', {'error': 'login incorrect', 'form': LoginForm})
 

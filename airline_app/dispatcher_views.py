@@ -33,7 +33,7 @@ def view_team(request, f_id):
         json_team = {'team': []}
         temp = {'pilot1': team.id_pilot1.name + ' ' + team.id_pilot1.surname,
                 'pilot2': team.id_pilot2.name + ' ' + team.id_pilot2.surname,
-                'navigator': team.id_navigator.name + ' ' + team.id_navigator.surname,
+                'navigat': team.id_navigator.name + ' ' + team.id_navigator.surname,
                 'stewardess1': team.id_stewardess1.name + ' ' + team.id_stewardess1.surname,
                 'stewardess2': team.id_stewardess2.name + ' ' + team.id_stewardess2.surname,
                 'radioman': team.id_radioman.name + ' ' + team.id_radioman.surname}

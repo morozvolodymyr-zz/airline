@@ -2,9 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>user_flights</title>
+    <title>User flights</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var root_url = 'http://127.0.0.1:8000';
+        function user_flights() {
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json',
+                url: root_url + '/user_flights/' + {{ id }},
+                data: JSON.stringify({
+                        'f_id': {{ id }}
+                    }),
+                dataType: 'json',
+                success: function (data, text_status, jq) {
+                    var flights = data.flights;
+                    var output = "<table><tr><td>#</td><td>From</td><td>To</td><td>Team</td><td></td></tr>";
+                    for (var i = 0; i < flights.length; i++) {
+                        output += "<tr><td>" + flights[i].id + "</td><td>" + flights[i].from + "</td><td>" +
+                                flights[i].to + "</td><td>" + flights[i].team + "</td><td><input type='button' " +
+                                "class='team' id='" + flights[i].id + "' " + " value='View team'></td></tr>"
+                    }
+                    output += "</table>";
+                    document.getElementById("flights").innerHTML = output;
+                    $(function(){
+                      $(".team")
+                              .on('click', function(){
+                                  var f_id = $(this).attr('id');
+                                  send_request(f_id)
+                      })
+                    })
+                }
+            })
+        }
+        function send_request(f_id) {
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json',
+                url: root_url + '/user_team/' + f_id,
+                data: JSON.stringify({
+                    'f_id': f_id
+                }),
+                dataType: 'json',
+                success: function(data, text_status, jq) {
+                    var team = data.team;
+                    console.log(team);
+                    document.getElementById("flights").innerHTML = "<form><table><tr><td>First pilot</td>" +
+                            "<td>Second Pilot</td><td>Navigator</td><td>Radioman</td>" +
+                            "<td>Stewardess</td><td>Stewardess</td><td></td></tr>" +
+                            "<tr><td>" + team[0].pilot1 + "</td><td>" + team[0].pilot2 + "</td><td>" + team[0].navigat
+                                + "</td><td>" + team[0].radioman + "</td><td>" + team[0].stewardess1 + "</td><td>" +
+                            team[0].stewardess2 + "</td><td><input type='button' class='ok' value='Ok'/></td></tr>" +
+                            "</table></form>";
+                    $(function(){
+                        $(".ok")
+                                .on('click', function(){
+                                    user_flights()
+                                })
+                    })
+                }
+            })
+        }
+    </script>
 </head>
-<body>
+<body onload="user_flights()">
+    <div id="flights">
 
+    </div>
 </body>
 </html>
