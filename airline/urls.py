@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
 from airline_app.admin_flights_list import add_flight, delete_flight, get_flights
-from airline_app.admin_users_list_view import users_list, delete_user
+from airline_app.admin_users_list_view import delete_user, confirm_user, get_users
 from airline_app.dispatcher_views import get_dispatcher, view_team, create_team, save_team
 from airline_app.user_view import user_flights, user_team
 from airline_app.views import RegistrationView, LoginView, GetUsersView, GetFlightsView
@@ -16,8 +16,9 @@ urlpatterns = [
     url(r'^login_handler$', LoginView.as_view()),
     url(r'^admin$', TemplateView.as_view(template_name='admin.html')),
     url(r'^get_users_list$', GetUsersView.as_view()),
-    url(r'^users_list$', users_list),
+    url(r'^users$', get_users),
     url(r'^delete_user/([\w]+)$', delete_user),
+    url(r'^confirm_user/([\w]+)$', confirm_user),
     url(r'^get_flights_list$', GetFlightsView.as_view()),
     url(r'^flights$', get_flights),
     url(r'^add_flight$', add_flight),

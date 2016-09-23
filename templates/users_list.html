@@ -10,30 +10,43 @@
             $.ajax({
                 type:'GET',
                 contentType: 'application/json',
-                url: root_url + '/users_list',
+                url: root_url + '/users',
                 dataType: 'json',
                 success: function(data, text_status, jq){
                     var users = data.users;
-                    var output = "<form><table><tr><td>Name</td><td>Surname</td><td>e-mail</td><td>role</td><td></td></tr>";
+                    var output = "<form><table><tr><td>Name</td><td>Surname</td><td>e-mail</td><td>role</td><td></td>" +
+                            "<td></td></tr>";
                     for (var i = 0; i < users.length; i++){
+                        var flag = "";
+                        if (users[i].confirmed == 'N'){
+                            flag = "<input type='button' class='conf' id='" + users[i].id + "' value='Confirm'>"
+                        }
                         output += "<tr><td>" + users[i].name + "</td><td>" + users[i].surname + "</td><td>" +
                                 users[i].e_mail + "</td><td>" + users[i].role + "</td><td><input type='button'" +
-                                "class='type'" + "id=" + "'" + users[i].id + "'" + "value='Delete'" + "</td></tr>"
+                                "class='del' id='" + users[i].id + "' value='Delete'></td><td>" + flag +
+                                "</td></tr>"
                     }
                     output += "</table></form>";
-                    document.getElementById("users").innerHTML = output;
+                    document.getElementById("users_l").innerHTML = output;
                     $(function(){
-                        $(".type")
+                        $(".del")
                                 .on('click', function(){
 {#                                    prompt#}
                                     var u_id = $(this).attr('id');
-                                    send_request(u_id)
+                                    del(u_id)
+                                })
+                    });
+                    $(function(){
+                        $(".conf")
+                                .on('click', function(){
+                                    var u_id = $(this).attr('id');
+                                    conf(u_id)
                                 })
                     })
                 }
             })
         }
-        function send_request(u_id){
+        function del(u_id){
             $.ajax({
                 type:'DELETE',
                 contentType: 'application/json',
@@ -43,10 +56,20 @@
                 }
             })
         }
+        function conf(u_id){
+            $.ajax({
+                type:'POST',
+                contentType: 'application/json',
+                url: root_url + '/confirm_user/' + u_id,
+                success: function(data, text_status, jq){
+                    users_list()
+                }
+            })
+        }
     </script>
 </head>
 <body onload="users_list()">
-    <div id="users">
+    <div id="users_l">
     </div>
 </body>
 </html>

@@ -44,7 +44,7 @@ class LoginView(FormView):
             user_password = login_form.cleaned_data['password']
             u = Users.objects.filter(e_mail=user_e_mail, password=user_password).first()
             request.session['user_id'] = u.id
-            if u is not None:
+            if u is not None and u.confirmed:
                 request.session['user_e_mail'] = user_e_mail
                 if u.id_role_id == 1:
                     request.session['user_role'] = 1
@@ -57,6 +57,8 @@ class LoginView(FormView):
                     return render(request, 'user_flights.html',
                                   {'e_mail': user_e_mail, 'name': u.name, 'surname': u.surname, 'id': u.id})
             else:
+                if not u.confirmed:
+                    return render(request, 'login.html', {'error': 'not confirmed yet', 'form': LoginForm})
                 return render(request, 'login.html', {'error': 'login incorrect', 'form': LoginForm})
 
 

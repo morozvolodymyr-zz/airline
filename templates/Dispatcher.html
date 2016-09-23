@@ -3,8 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <title>Dispatcher</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        var root_url = 'http://127.0.0.1:8000';
+        function dispatcher(){
+            $.ajax({
+                type: 'GET',
+                contentType: 'application/json',
+                url: root_url + '/get_dispatcher',
+                dataType: 'json',
+                success: function (data, text_status, jq) {
+                    var flights = data.flights;
+                    var output = "<table><tr><td>#</td><td>From</td><td>To</td><td>Team</td><td></td></tr>";
+                    for (var i = 0; i < flights.length; i++) {
+                        var team = '';
+                        var add_team = '';
+                        if (flights[i].is_team == 'N') {
+                            add_team = "<td><input type='button' class='team' id='" + flights[i].id +
+                                "' " + " value='Add team'></td>"
+                        }
+                        else {
+                            team = flights[i].team;
+                            add_team = "<td><input type='button' class='team' id='" + flights[i].id +
+                                "' " + " value='View team'></td>"
+                        }
+                        output += "<tr><td>" + flights[i].id + "</td><td>" + flights[i].from + "</td><td>" +
+                                flights[i].to + "</td><td>" + team + "</td>" + add_team + "</tr>"
+                    }
+                    output += "</table>";
+                    document.getElementById("dispatcher").innerHTML = output;
+                    $(function(){
+                      $(".team")
+                              .on('click', function(){
+                                  var f_id = $(this).attr('id');
+                                  var action = $(this).attr('value');
+                                  send_request(f_id, action)
+                      })
+                    })
+                }
+            })
+        }
+        function send_request(f_id, action) {
+            if (action == 'View team') {
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: root_url + '/view_team/' + f_id,
+                    data: JSON.stringify({
+                        'f_id': f_id
+                    }),
+                    dataType: 'json',
+                    success: function(data, text_status, jq) {
+                        var team = data.team;
+                        document.getElementById("dispatcher").innerHTML = "<form><table><tr><td>First pilot</td>" +
+                            "<td>Second Pilot</td><td>Navigator</td><td>Radioman</td>" +
+                            "<td>Stewardess</td><td>Stewardess</td><td></td></tr>" +
+                            "<tr><td>" + team[0].pilot1 + "</td><td>" + team[0].pilot2 + "</td><td>" + team[0].navigat
+                                + "</td><td>" + team[0].radioman + "</td><td>" + team[0].stewardess1 + "</td><td>" +
+                            team[0].stewardess2 + "</td><td><input type='button' class='ok' value='Ok'/></td></tr>" +
+                            "</table></form>";
+                        $(function(){
+                            $(".ok")
+                                    .on('click', function(){
+                                        dispatcher()
+                                    })
+                        })
+                    }
+                })
+            }
+            else {
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: root_url + '/create_team',
+                    success: function(data, text_status, jq){
+                        var pilots = data.pilots;
+                        var navigators = data.navigators;
+                        var stewardess = data.stewardess;
+                        var radioman = data.radiomen;
+                        var output = "<form><table><tr><td>First pilot</td><td>Second Pilot</td><td>Navigator</td>" +
+                                "<td>Radioman</td><td>Stewardess 1</td><td>Stewardess 2</td><td></td></tr>" +
+                                "<tr><td><select id='pilot1'>";
+                        for (var i = 0; i < pilots.length; i++){
+                            output += "<option id='pilot1' value=" + pilots[i].id + ">" + pilots[i].name + " "
+                                    + pilots[i].surname + "</option>"
+                        }
+                        output += "</select></td><td><select id='pilot2'>";
+                        for (var j = 0; j < pilots.length; j++) {
+                            output += "<option id='pilot2' value=" + pilots[j].id + ">" + pilots[j].name + " "
+                                    + pilots[j].surname + "</option>";
+                        }
+                        output += "</select></td><td><select id='navigator'>";
+                        for (var k = 0; k < navigators.length; k++) {
+                            output += "<option id='navigator' value=" + navigators[k].id + ">" + navigators[k].name + " "
+                                    + navigators[k].surname + "</option>";
+                        }
+                        output += "</select></td><td><select id='radioman'>";
+                        for (var n = 0; n < radioman.length; n++) {
+                            output += "<option id='radioman' value=" + radioman[n].id + ">" + radioman[n].name + " "
+                                    + radioman[n].surname + "</option>";
+                        }
+                        output += "</select></td><td><select id='stewardess1'>";
+                        for (var l = 0; l < stewardess.length; l++) {
+                            output += "<option id='stewardess1' value=" + stewardess[l].id + ">" + stewardess[l].name + " "
+                                    + stewardess[l].surname + "</option>";
+                        }
+                        output += "</select></td><td><select id='stewardess2'>";
+                        for (var m = 0; m < stewardess.length; m++) {
+                            output += "<option id='stewardess2' value=" + stewardess[m].id + ">" + stewardess[m].name + " "
+                                    + stewardess[m].surname + "</option>";
+                        }
+                        output += "</td><td><input type='button' class='save' value='Save'/>";
+                        document.getElementById("dispatcher").innerHTML = output;
+                        $(function(){
+                            $(".save")
+                                    .on('click', function(){
+                                        var pilot1 = document.getElementById("pilot1").value;
+                                        var pilot2 = document.getElementById("pilot2").value;
+                                        var navigator = document.getElementById("navigator").value;
+                                        var radioman = document.getElementById("radioman").value;
+                                        var stewardess1 = document.getElementById("stewardess1").value;
+                                        var stewardess2 = document.getElementById("stewardess2").value;
+                                        save_team(f_id, pilot1, pilot2, navigator, radioman, stewardess1, stewardess2);
+                                    })
+                        })
+                    }
+                })
+            }
+        }
+        function save_team(f_id, pilot1, pilot2, navigator, radioman, stewardess1, stewardess2){
+            $.ajax({
+                type:'POST',
+                contentType: 'application/json',
+                url: root_url + '/save_team/' + f_id,
+                data: JSON.stringify({
+                    'f_id':f_id,
+                    'pilot1':pilot1,
+                    'pilot2':pilot2,
+                    'navigator':navigator,
+                    'radioman':radioman,
+                    'stewardess1':stewardess1,
+                    'stewardess2':stewardess2
+                    }),
+                success: function(data, text_status, jq){
+                    dispatcher();
+                }
+            })
+        }
+    </script>
 </head>
-<body>
-
+<body onload="dispatcher()">
+    <div id="dispatcher">
+    </div>
 </body>
 </html>
