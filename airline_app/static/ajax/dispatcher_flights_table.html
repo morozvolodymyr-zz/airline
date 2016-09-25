@@ -1,0 +1,25 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>#</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Team</th>
+        <th></th>
+    </tr>
+    <% _.each(flights, function (flight) { %>
+    <tr>
+        <td><%- flight.id %></td>
+        <td><%- flight.from %></td>
+        <td><%- flight.to %></td>
+        <% if (flight.is_team === 'N'){ %>
+        <td></td>
+        <td class="bt"><input type='button' class='team btn btn-primary btn-sm' id="<%- flight.id %>" value='Add team'></td>
+        <% } else { %>
+        <td><%- flight.team %></td>
+        <td class="bt"><input type='button' class='team btn btn-success btn-sm' id="<%- flight.id %>" value='View team'></td>
+        <% } %>
+    </tr>
+    <% }) %>
+    </tbody>
+</table>

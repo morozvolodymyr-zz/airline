@@ -13,9 +13,9 @@
         <td><%- user.surname %></td>
         <td><%- user.e_mail %></td>
         <td><%- user.role %></td>
-        <td class="bt"><input type="button" class="del btn btn-danger btn-xs" id="<%- user.id %>" value="Delete"></td>
+        <td class="bt"><input type="button" class="del btn btn-danger btn-sm" id="<%- user.id %>" value="Delete"></td>
         <% if(user.confirmed === 'N'){ %>
-        <td class="bt"><input type='button' class='conf btn btn-success btn-xs' id="<%- user.id %>" value='Confirm'></td>
+        <td class="bt"><input type='button' class='conf btn btn-success btn-sm' id="<%- user.id %>" value='Confirm'></td>
         <% } %>
     </tr>
     <% }) %>

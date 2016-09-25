@@ -76,3 +76,10 @@ class GetFlightsView(View):
 
     def get(self, request):
         return render(request, 'admin_flights.html', {})
+
+
+class GetFlightsDispView(View):
+    template_name = 'dispatcher_flights.html'
+
+    def get(self, request):
+        return render(request, 'dispatcher_flights.html', {})
