@@ -27,7 +27,7 @@
                     document.getElementById("flights").innerHTML = output;
                     $(function(){
                         $(".add")
-                                .on('click', function(){
+                                .click(function(){
                                     var from = document.getElementById("from").value;
                                     var to = document.getElementById("to").value;
                                     send_flight(from, to);

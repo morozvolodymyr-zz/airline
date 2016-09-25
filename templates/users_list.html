@@ -3,65 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <title>Users list</title>
+    {% load static from staticfiles %}
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <style>
+        td.bt{
+            text-align: center;
+        }
+    </style>
     <script type="text/javascript">
         var root_url = 'http://127.0.0.1:8000';
-        function users_list(){
-            $.ajax({
-                type:'GET',
-                contentType: 'application/json',
-                url: root_url + '/users',
-                dataType: 'json',
-                success: function(data, text_status, jq){
-                    var users = data.users;
-                    var output = "<form><table><tr><td>Name</td><td>Surname</td><td>e-mail</td><td>role</td><td></td>" +
-                            "<td></td></tr>";
-                    for (var i = 0; i < users.length; i++){
-                        var flag = "";
-                        if (users[i].confirmed == 'N'){
-                            flag = "<input type='button' class='conf' id='" + users[i].id + "' value='Confirm'>"
-                        }
-                        output += "<tr><td>" + users[i].name + "</td><td>" + users[i].surname + "</td><td>" +
-                                users[i].e_mail + "</td><td>" + users[i].role + "</td><td><input type='button'" +
-                                "class='del' id='" + users[i].id + "' value='Delete'></td><td>" + flag +
-                                "</td></tr>"
+        function users_list() {
+            $(window).load('static/ajax/users_table.html', function (template) {
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: root_url + '/users',
+                    dataType: 'json',
+                    success: function (data, text_status, jq) {
+                        var users = data.users;
+                        $('#users_l').html(
+                            _.template(template)({
+                                users: users
+                            })
+                        );
+                        {#                        var output = "<form><table><tr><td>Name</td><td>Surname</td><td>e-mail</td><td>role</td><td></td>" +#}
+                        {#                                "<td></td></tr>";#}
+                        {#                        for (var i = 0; i < users.length; i++){#}
+                        {#                            var flag = "";#}
+                        {#                            if (users[i].confirmed == 'N'){#}
+                        {#                                flag = "<input type='button' class='conf' id='" + users[i].id + "' value='Confirm'>"#}
+                        {#                            }#}
+                        {#                            output += "<tr><td>" + users[i].name + "</td><td>" + users[i].surname + "</td><td>" +#}
+                        {#                                    users[i].e_mail + "</td><td>" + users[i].role + "</td><td><input type='button'" +#}
+                        {#                                    "class='del' id='" + users[i].id + "' value='Delete'></td><td>" + flag +#}
+                        {#                                    "</td></tr>"#}
+                        {#                        }#}
+                        {#                        output += "</table></form>";#}
+                        {#                        $('#users_l').html(output);#}
+                        $(".del").click(function () {
+                            var u_id = $(this).attr('id');
+                            del(u_id)
+                        });
+                        $(".conf").click(function () {
+                            var u_id = $(this).attr('id');
+                            conf(u_id)
+                        });
                     }
-                    output += "</table></form>";
-                    document.getElementById("users_l").innerHTML = output;
-                    $(function(){
-                        $(".del")
-                                .on('click', function(){
-{#                                    prompt#}
-                                    var u_id = $(this).attr('id');
-                                    del(u_id)
-                                })
-                    });
-                    $(function(){
-                        $(".conf")
-                                .on('click', function(){
-                                    var u_id = $(this).attr('id');
-                                    conf(u_id)
-                                })
-                    })
-                }
-            })
+                })
+            });
         }
-        function del(u_id){
+        function del(u_id) {
             $.ajax({
-                type:'DELETE',
+                type: 'DELETE',
                 contentType: 'application/json',
                 url: root_url + '/delete_user/' + u_id,
-                success: function(data, text_status, jq){
+                success: function (data, text_status, jq) {
                     users_list()
                 }
             })
         }
-        function conf(u_id){
+        function conf(u_id) {
             $.ajax({
-                type:'POST',
+                type: 'POST',
                 contentType: 'application/json',
                 url: root_url + '/confirm_user/' + u_id,
-                success: function(data, text_status, jq){
+                success: function (data, text_status, jq) {
                     users_list()
                 }
             })

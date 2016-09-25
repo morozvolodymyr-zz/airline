@@ -1,0 +1,23 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>e-mail</th>
+        <th>role</th>
+        <th></th>
+    </tr>
+    <% _.each(users, function (user) { %>
+    <tr>
+        <td><%- user.name %></td>
+        <td><%- user.surname %></td>
+        <td><%- user.e_mail %></td>
+        <td><%- user.role %></td>
+        <td class="bt"><input type="button" class="del btn btn-danger btn-xs" id="<%- user.id %>" value="Delete"></td>
+        <% if(user.confirmed === 'N'){ %>
+        <td class="bt"><input type='button' class='conf btn btn-success btn-xs' id="<%- user.id %>" value='Confirm'></td>
+        <% } %>
+    </tr>
+    <% }) %>
+    </tbody>
+</table>

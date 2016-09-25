@@ -28,6 +28,8 @@ class LoginView(FormView):
                 # return redirect(to='admin', e_mail=u.e_mail, name=u.name, surname=u.surname)
                 return render(request, 'admin.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
             # redirect
+            # fixme
+            # todo
             elif u.id_role_id == 2:
                 return render(request, 'dispatcher.html', {'e_mail': u.e_mail, 'name': u.name, 'surname': u.surname})
             else:
