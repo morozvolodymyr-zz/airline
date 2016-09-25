@@ -1,0 +1,24 @@
+<table class="table table-bordered">
+    <tbody>
+    <tr>
+        <th>#</th>
+        <th>From</th>
+        <th>To</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input class="form-control" type='text' id='from' placeholder="City from"></td>
+        <td><input class="form-control" type='text' id='to' placeholder="City to"></td>
+        <td class="bt"><input type='button' class='add btn btn-success btn-sm' value='Add'></td>
+    </tr>
+    <% _.each(flights, function (flight) { %>
+    <tr>
+        <td><%- flight.id %></td>
+        <td><%- flight.from %></td>
+        <td><%- flight.to %></td>
+        <td class="bt"><input type="button" class="delete btn btn-danger btn-sm" id="<%- flight.id %>" value="Delete"></td>
+    </tr>
+    <% }) %>
+    </tbody>
+</table>

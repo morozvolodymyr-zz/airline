@@ -3,44 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Flights</title>
+    {% load static from staticfiles %}
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <style>
+        td.bt{
+            text-align: center;
+        }
+    </style>
     <script type="text/javascript">
         var root_url = 'http://127.0.0.1:8000';
-        function flights(){
-            $.ajax({
-                type:'GET',
-                contentType: 'application/json',
-                url: root_url + '/flights',
-                dataType: 'json',
-                success: function(data, text_status, jq){
-                    var flights = data.flights;
-                    var output = "<form><table><tr><td>#</td><td>From</td><td>To</td><td></td></tr>" +
-                            "<tr><td></td><td><input type='text' id='from'/></td>" +
-                            "<td><input type='text' id='to'/></td>" +
-                            "<td><input type='button' class='add' value='Add'</td></tr>";
-                    for (var i = 0; i < flights.length; i++){
-                        output += "<tr><td>" + flights[i].id + "</td><td>" + flights[i].from + "</td><td>" +
-                                flights[i].to + "</td><td><input type='button' class='delete' id='" + flights[i].id +
-                                "' " + "value='Delete'</td></tr>"
+        function flights() {
+            $(window).load('static/ajax/admin_flights_table.html', function (template) {
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: root_url + '/flights',
+                    dataType: 'json',
+                    success: function (data, text_status, jq) {
+                        var flights = data.flights;
+                        $('#flights').html(
+                                _.template(template)({
+                                    flights: flights
+                                })
+                        );
+                        $(function () {
+                            $(".add")
+                                    .click(function () {
+                                        var from = $('#from').val();
+                                        var to = $('#to').val();
+                                        send_flight(from, to);
+                                    })
+                        });
+                        $(function () {
+                            $(".delete")
+                                    .click(function () {
+                                        var f_id = $(this).attr('id');
+                                        delete_flight(f_id);
+                                    })
+                        })
                     }
-                    output += "</table></form>";
-                    document.getElementById("flights").innerHTML = output;
-                    $(function(){
-                        $(".add")
-                                .click(function(){
-                                    var from = document.getElementById("from").value;
-                                    var to = document.getElementById("to").value;
-                                    send_flight(from, to);
-                                })
-                    });
-                    $(function(){
-                        $(".delete")
-                                .on('click', function(){
-                                    var f_id = $(this).attr('id');
-                                    delete_flight(f_id);
-                                })
-                    })
-                }
+                })
             })
         }
         function send_flight(from, to){
