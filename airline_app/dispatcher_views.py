@@ -31,7 +31,8 @@ def view_team(request, f_id):
         flight = Flights.objects.filter(id=f_id).first()
         team = flight.id_team
         json_team = {'team': []}
-        temp = {'pilot1': team.id_pilot1.name + ' ' + team.id_pilot1.surname,
+        temp = {'id': team.id,
+                'pilot1': team.id_pilot1.name + ' ' + team.id_pilot1.surname,
                 'pilot2': team.id_pilot2.name + ' ' + team.id_pilot2.surname,
                 'navigat': team.id_navigator.name + ' ' + team.id_navigator.surname,
                 'stewardess1': team.id_stewardess1.name + ' ' + team.id_stewardess1.surname,

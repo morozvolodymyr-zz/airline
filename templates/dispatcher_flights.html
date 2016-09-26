@@ -44,30 +44,30 @@
         }
         function send_request(f_id, action) {
             if (action == 'View team') {
-                $.ajax({
-                    type: 'GET',
-                    contentType: 'application/json',
-                    url: root_url + '/view_team/' + f_id,
-                    data: JSON.stringify({
-                        'f_id': f_id
-                    }),
-                    dataType: 'json',
-                    success: function(data, text_status, jq) {
-                        var team = data.team;
-                        document.getElementById("dispatcher").innerHTML = "<form><table><tr><td>First pilot</td>" +
-                            "<td>Second Pilot</td><td>Navigator</td><td>Radioman</td>" +
-                            "<td>Stewardess</td><td>Stewardess</td><td></td></tr>" +
-                            "<tr><td>" + team[0].pilot1 + "</td><td>" + team[0].pilot2 + "</td><td>" + team[0].navigat
-                                + "</td><td>" + team[0].radioman + "</td><td>" + team[0].stewardess1 + "</td><td>" +
-                            team[0].stewardess2 + "</td><td><input type='button' class='ok' value='Ok'/></td></tr>" +
-                            "</table></form>";
-                        $(function(){
-                            $(".ok")
-                                    .on('click', function(){
-                                        dispatcher()
-                                    })
-                        })
-                    }
+                $(window).load('static/ajax/dispatcher_team_table.html', function (template) {
+                    $.ajax({
+                        type: 'GET',
+                        contentType: 'application/json',
+                        url: root_url + '/view_team/' + f_id,
+                        data: JSON.stringify({
+                            'f_id': f_id
+                        }),
+                        dataType: 'json',
+                        success: function (data, text_status, jq) {
+                            var team = data.team;
+                            $('#dispatcher').html(
+                                _.template(template)({
+                                    team: team
+                                })
+                            );
+                            $(function () {
+                                $(".ok")
+                                        .on('click', function () {
+                                            dispatcher()
+                                        })
+                            })
+                        }
+                    })
                 })
             }
             else {
